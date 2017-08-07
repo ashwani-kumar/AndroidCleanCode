@@ -1,5 +1,6 @@
 package android.example.com.webservicemanager.managers;
 
+import android.example.com.webservicemanager.constants.Constants;
 import android.example.com.webservicemanager.retrofit.WeatherApiInterface;
 
 import java.io.IOException;
@@ -19,13 +20,13 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class WeatherServiceManager {
     private static Retrofit retrofit = null;
     private static WeatherServiceManager weatherServiceManager;
-    public static final String BASE_URL = "http://api.wunderground.com/";
+
     private WeatherApiInterface weatherApiInterface = null;
 
     private WeatherServiceManager(){
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(Constants.BASE_URL)
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .build();
         }
@@ -43,28 +44,4 @@ public class WeatherServiceManager {
         return weatherApiInterface;
     }
 
-    private static Map<String,String> getHeaders() {
-        Map<String, String> headers = new HashMap<>();
-        return headers;
-    }
-
-    private static OkHttpClient getHttpClient(final Map<String, String> headers){
-        final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                okhttp3.Request original = chain.request();
-                okhttp3.Request.Builder requestBuilder = original.newBuilder();
-                for(Map.Entry<String, String> pairs : headers.entrySet()){
-                        if(pairs.getValue() != null){
-                            requestBuilder.header(pairs.getKey(), pairs.getValue());
-                        }
-                }
-                requestBuilder.method(original.method(), original.body());
-                okhttp3.Request request = requestBuilder.build();
-                return chain.proceed(request);
-            }
-        });
-        return httpClient.build();
-    }
 }
