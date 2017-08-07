@@ -1,0 +1,37 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "26.0.0"
+    defaultConfig {
+        applicationId "android.example.com.roomdemo"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:'+rootProject.expressoLibVersion, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:'+rootProject.supportLibraryVersion
+    compile 'com.android.support:design:'+rootProject.supportLibraryVersion
+    compile 'com.google.android.gms:play-services-location:'+rootProject.playServicesVersion
+    testCompile 'junit:junit:'+rootProject.junitLibVersion
+    compile project(path: ':webservicemanager')
+    compile "com.squareup.picasso:picasso:"+rootProject.picassoLibVersion
+    compile 'android.arch.persistence.room:runtime:' + rootProject.archRoomVersion
+    annotationProcessor 'android.arch.persistence.room:compiler:' + rootProject.archRoomVersion
+    apt 'android.arch.persistence.room:compiler:' + rootProject.archRoomVersion
+}
